@@ -15,19 +15,28 @@ class OhmsControllerTest {
 
     @BeforeEach
     void setUp() {
-
         cont = new OhmsController();
         cont.setRoundingDigits(3);
+        cont.setMilliAmp(false);
+        cont.toogleOhms(false, false);
     }
 
     @AfterEach
     void tearDown() {
+
     }
 
     // Resistance
     @Test
     void calculateOhmsFromVoltsAndAmps() {
-        assertEquals(3.0, cont.calculateOhmsFromVoltsAndAmps(12.0, 4.0), 0.001 );
+        assertEquals(3.0, cont.calculateOhmsFromVoltsAndAmps(12.0, 4.0), 1.0 );
+
+        cont.toogleOhms(true, false);
+        assertEquals(0.003, cont.calculateOhmsFromVoltsAndAmps(12.0, 4.0), 0.0001 );
+
+        cont.setRoundingDigits(6);
+        cont.toogleOhms(false, true);
+        assertEquals(0.0000305, cont.calculateOhmsFromVoltsAndAmps(124.0, 4.0), 0.000001 );
     }
 
     @Test
@@ -60,16 +69,25 @@ class OhmsControllerTest {
     @Test
     void calculateAmpsFromVoltsAndOhms() {
         assertEquals(48.0, cont.calculateAmpsFromVoltsAndOhms(144.0, 3.0), 0.001);
+
+        cont.setMilliAmp(true);
+        assertEquals(48000, cont.calculateAmpsFromVoltsAndOhms(144.0, 3.0), 0.001);
     }
 
     @Test
     void calculateAmpsFromWattsAndVolts() {
         assertEquals(48.0, cont.calculateAmpsFromWattsAndVolts(144.0, 3.0), 0.001 );
+
+        cont.setMilliAmp(true);
+        assertEquals(48000, cont.calculateAmpsFromWattsAndVolts(144.0, 3.0), 0.001);
     }
 
     @Test
     void calculateAmpsFromWattsAndOhms() {
        assertEquals(6.928, cont.calculateAmpsFromWattsAndOhms(144.0, 3.0), 0.001 );
+
+       cont.setMilliAmp(true);
+       assertEquals(6928.0, cont.calculateAmpsFromWattsAndOhms(144.0, 3.0), 0.001 );
     }
 
     // Watts
